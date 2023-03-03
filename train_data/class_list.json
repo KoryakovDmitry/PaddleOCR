@@ -1,0 +1,23 @@
+{
+    "0": "INNCounterAgent",
+    "1": "INNOrg",
+    "2": "KPPCounterAgent",
+    "3": "KPPOrg",
+    "4": "addressCounterAgent",
+    "5": "addressOrg",
+    "6": "dateOsnovanie",
+    "7": "docDate",
+    "8": "docNumber",
+    "9": "nameCounterAgent",
+    "10": "nameOrg",
+    "11": "numberOsnovanie",
+    "12": "oboroti",
+    "13": "period",
+    "14": "saldo",
+    "15": "subtotal",
+    "16": "taxes",
+    "17": "total",
+    "18": "totalWithoutTaxes",
+    "19": "withTaxes",
+    "20": "O"
+}

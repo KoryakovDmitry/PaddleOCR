@@ -42,7 +42,8 @@ class ArgsParser(ArgumentParser):
     def __init__(self):
         super(ArgsParser, self).__init__(
             formatter_class=RawDescriptionHelpFormatter)
-        self.add_argument("-c", "--config", help="configuration file to use")
+        # self.add_argument("-c", "--config", help="configuration file to use", default="/Users/dmitry/PaddleOCR/configs/kie/vi_layoutxlm/ser_vi_layoutxlm_xfund_zh.yml",)
+        self.add_argument("-c", "--config", help="configuration file to use", default="/Users/dmitry/PaddleOCR/configs/kie/sdmgr/kie_unet_sdmgr.yml",)
         self.add_argument(
             "-o", "--opt", nargs='+', help="set configuration options")
         self.add_argument(

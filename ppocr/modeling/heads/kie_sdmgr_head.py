@@ -27,7 +27,7 @@ from paddle import ParamAttr
 class SDMGRHead(nn.Layer):
     def __init__(self,
                  in_channels,
-                 num_chars=92,
+                 num_chars=140,  # +1
                  visual_dim=16,
                  fusion_dim=1024,
                  node_input=32,
@@ -35,7 +35,7 @@ class SDMGRHead(nn.Layer):
                  edge_input=5,
                  edge_embed=256,
                  num_gnn=2,
-                 num_classes=26,
+                 num_classes=21,  # same
                  bidirectional=False):
         super().__init__()
 
@@ -73,7 +73,7 @@ class SDMGRHead(nn.Layer):
         all_nums = paddle.concat(char_nums)
         valid = paddle.nonzero((all_nums > 0).astype(int))
         temp_all_nums = (
-            paddle.gather(all_nums, valid) - 1).unsqueeze(-1).unsqueeze(-1)
+                paddle.gather(all_nums, valid) - 1).unsqueeze(-1).unsqueeze(-1)
         temp_all_nums = paddle.expand(temp_all_nums, [
             temp_all_nums.shape[0], temp_all_nums.shape[1], rnn_nodes.shape[-1]
         ])
@@ -117,7 +117,7 @@ class GNNLayer(nn.Layer):
                 paddle.concat([
                     paddle.expand(sample_nodes.unsqueeze(1), [-1, num, -1]),
                     paddle.expand(sample_nodes.unsqueeze(0), [num, -1, -1])
-                ], -1).reshape([num**2, -1]))
+                ], -1).reshape([num ** 2, -1]))
             start += num
         cat_nodes = paddle.concat([paddle.concat(cat_nodes), edges], -1)
         cat_nodes = self.relu(self.in_fc(cat_nodes))
@@ -127,10 +127,10 @@ class GNNLayer(nn.Layer):
         for num in nums:
             residual = F.softmax(
                 -paddle.eye(num).unsqueeze(-1) * 1e9 +
-                coefs[start:start + num**2].reshape([num, num, -1]), 1)
-            residuals.append((residual * cat_nodes[start:start + num**2]
+                coefs[start:start + num ** 2].reshape([num, num, -1]), 1)
+            residuals.append((residual * cat_nodes[start:start + num ** 2]
                               .reshape([num, num, -1])).sum(1))
-            start += num**2
+            start += num ** 2
 
         nodes += self.relu(self.out_fc(paddle.concat(residuals)))
         return [nodes, cat_nodes]

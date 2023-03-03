@@ -1,23 +1,23 @@
 Global:
-  use_gpu: True
-  epoch_num: &epoch_num 200
+  use_gpu: False
+  epoch_num: &epoch_num 1
   log_smooth_window: 10
-  print_batch_step: 10
-  save_model_dir: ./output/ser_vi_layoutxlm_xfund_zh
-  save_epoch_step: 2000
+  print_batch_step: 1
+  save_model_dir: /Users/dmitry/PaddleOCR/train_res
+  save_epoch_step: 1
   # evaluation is run every 10 iterations after the 0th iteration
-  eval_batch_step: [ 0, 19 ]
-  cal_metric_during_train: False
+  eval_batch_step: [ 0, 2 ]
+  cal_metric_during_train: True
   save_inference_dir:
   use_visualdl: False
   seed: 2022
-  infer_img: ppstructure/docs/kie/input/zh_val_42.jpg
+  infer_img:
   # if you want to predict using the groundtruth ocr info,
   # you can use the following config
   # infer_img: train_data/XFUND/zh_val/val.json
   # infer_mode: False
 
-  save_res_path: ./output/ser/xfund_zh/res
+  save_res_path:
   kie_rec_model_dir: 
   kie_det_model_dir:
 
@@ -31,7 +31,7 @@ Architecture:
     checkpoints:
     # one of base or vi
     mode: vi
-    num_classes: &num_classes 7
+    num_classes: &num_classes 43
 
 Loss:
   name: VQASerTokenLayoutLMLoss
@@ -53,7 +53,7 @@ Optimizer:
     
 PostProcess:
   name: VQASerTokenLayoutLMPostProcess
-  class_path: &class_path train_data/XFUND/class_list_xfun.txt
+  class_path: &class_path /Users/dmitry/PaddleOCR/class_lists/class_list.txt
 
 Metric:
   name: VQASerTokenMetric
@@ -62,9 +62,9 @@ Metric:
 Train:
   dataset:
     name: SimpleDataSet
-    data_dir: train_data/XFUND/zh_train/image
+    data_dir: /Users/dmitry/PaddleOCR/dataset_cr/dataset_processed/images
     label_file_list: 
-      - train_data/XFUND/zh_train/train.json
+      - /Users/dmitry/PaddleOCR/dataset_cr/dataset_processed/train.txt
     ratio_list: [ 1.0 ]
     transforms:
       - DecodeImage: # load image
@@ -86,8 +86,8 @@ Train:
           size: [224,224]
       - NormalizeImage:
           scale: 1
-          mean: [ 123.675, 116.28, 103.53 ]
-          std: [ 58.395, 57.12, 57.375 ]
+          mean: [202.99014282226562, 201.5799560546875, 203.59658813476562]
+          std: [53.26708984375, 57.00006866455078, 60.91695022583008]
           order: 'hwc'
       - ToCHWImage:
       - KeepKeys:
@@ -95,15 +95,15 @@ Train:
   loader:
     shuffle: True
     drop_last: False
-    batch_size_per_card: 8
+    batch_size_per_card: 2
     num_workers: 4
 
 Eval:
   dataset:
     name: SimpleDataSet
-    data_dir: train_data/XFUND/zh_val/image
+    data_dir: /Users/dmitry/PaddleOCR/dataset_cr/dataset_processed/images
     label_file_list:
-      - train_data/XFUND/zh_val/val.json
+      - /Users/dmitry/PaddleOCR/dataset_cr/dataset_processed/test.txt
     transforms:
       - DecodeImage: # load image
           img_mode: RGB
@@ -123,8 +123,8 @@ Eval:
           size: [224,224]
       - NormalizeImage:
           scale: 1
-          mean: [ 123.675, 116.28, 103.53 ]
-          std: [ 58.395, 57.12, 57.375 ]
+          mean: [202.99014282226562, 201.5799560546875, 203.59658813476562]
+          std: [53.26708984375, 57.00006866455078, 60.91695022583008]
           order: 'hwc'
       - ToCHWImage:
       - KeepKeys:
@@ -132,5 +132,5 @@ Eval:
   loader:
     shuffle: False
     drop_last: False
-    batch_size_per_card: 8
+    batch_size_per_card: 2
     num_workers: 4

@@ -301,7 +301,7 @@ class KieLabelEncode(object):
 
     def pad_text_indices(self, text_inds):
         """Pad text index to same length."""
-        max_len = 300
+        max_len = 1024
         recoder_len = max([len(text_ind) for text_ind in text_inds])
         padded_text_inds = -np.ones((len(text_inds), max_len), np.int32)
         for idx, text_ind in enumerate(text_inds):
@@ -327,7 +327,7 @@ class KieLabelEncode(object):
                 np.fill_diagonal(edges, -1)
                 labels = np.concatenate([labels, edges], -1)
         padded_text_inds, recoder_len = self.pad_text_indices(text_inds)
-        max_num = 300
+        max_num = 1024
         temp_bboxes = np.zeros([max_num, 4])
         h, _ = bboxes.shape
         temp_bboxes[:h, :] = bboxes
